@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+  <display-name>filterWeb</display-name>
+  
+  <!-- filter的摆放的先后顺序只决定初始化化的先后顺序  -->
+  <filter>
+  	<filter-name>firstFilter</filter-name>
+  	<filter-class>cn.hncu.filter.FirstFilter</filter-class>
+  </filter>
+  <filter>
+  	<description>中文乱码的过滤器</description>
+  	<filter-name>characterFilter</filter-name>
+  	<filter-class>cn.hncu.filter.CharacterFilter</filter-class>
+  	<init-param>
+  		<description>字符编码参数</description>
+  		<param-name>charset</param-name>
+  		<param-value>utf-8</param-value>
+  	</init-param>
+  </filter>
+  
+  
+  
+  <!-- filter-mapping摆放的先后顺序决定 '拦截' 的先后顺序！！！ -->
+  <!-- 解决中文乱码最好拦截最前面，然后进行编码设置 -->
+  <filter-mapping>
+  	<filter-name>characterFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+  	<filter-name>firstFilter</filter-name>
+  	<!-- <url-pattern>/*</url-pattern> -->
+  	<!-- <url-pattern>/jsps/*.jsp</url-pattern>  WA  -->
+  	<url-pattern>/jsps/*</url-pattern>
+  	<servlet-name>GoodsServlet</servlet-name>
+  </filter-mapping>
+  <!-- 
+  	/* 代表拦截当前项目下的所有资源 
+  	*.jsp 代表拦截当前项目下的所有 后缀为'.jsp'的资源
+  	/jsps/*.jsp 反例！！！这样是挂的， '*.xxx'前面不能有其他路径！！！
+  	/jsps/* 这样是可以的 代表拦截/jsps/路径下面的所有资源
+  	<servlet-name>GoodsServlet</servlet-name> 这样表拦截指定的servlet
+  	还可以设置拦截请求方式：默认<dispatcher>REQUEST</dispatcher>
+  	如果显示设置了一个或者多个<dispatcher>的参数则不会自动添加默认方式，如果一个都没设置则为默认方式。
+  -->
+  
+  
+  <servlet>
+  	<servlet-name>GoodsServlet</servlet-name>
+  	<servlet-class>cn.hncu.servlet.GoodsServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>GoodsServlet</servlet-name>
+  	<url-pattern>/servlet/goods</url-pattern>
+  </servlet-mapping>
+  
+  
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
